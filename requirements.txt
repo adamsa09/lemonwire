@@ -1,0 +1,6 @@
+eyed3
+beautifulsoup4
+pytubefix
+selenium
+webdriver-manager
+moviepy
