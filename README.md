@@ -10,3 +10,5 @@ A python based tool that gets music from YouTube as `.mp3` and adds the correct 
 ## Ideas
 - **Metadata tagging**
 	- Use AI APIs to automatically tag
+	- Ability to download entire youtube playlists
+    	- Would need AI integration to deduce song artists & title from each video
