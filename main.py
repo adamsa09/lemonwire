@@ -17,17 +17,14 @@ from selenium.webdriver.common.by import By
 from webdriver_manager.chrome import ChromeDriverManager
 
 banner = """
-   __  __/ /_   ____ ___  ____ |__  /   / /_____ _____ _____ ____  _____
-  / / / / __/  / __ `__ \/ __ \ /_ <   / __/ __ `/ __ `/ __ `/ _ \/ ___/
- / /_/ / /_   / / / / / / /_/ /__/ /  / /_/ /_/ / /_/ / /_/ /  __/ /    
- \__, /\__/  /_/ /_/ /_/ .___/____/   \__/\__,_/\__, /\__, /\___/_/     
-/____/                /_/                      /____//____/
+  _                          _         
+ | |___ _ __  ___ _ ___ __ _(_)_ _ ___ 
+ | / -_) '  \\/ _ \\ ' \\ V  V / | '_/ -_)
+ |_\\___|_|_|_\\___/_||_\\_/\\_/|_|_| \\___|
 ------------------------------------------------------------------------
 
 
 """
-
-print(banner)
 
 # --------------------------------------
 
@@ -57,7 +54,7 @@ def get_song_links(search_url):
 
     return links
 
-def compile_search_url(song_name, artist):
+def compile_search_url(song_name, artist, yt_base_search):
     print('[i] Compiling search URL...')
     # Compile the search URL
     complete_song = f'{song_name} by {artist}'
@@ -75,7 +72,7 @@ def transform_to_mp3(song_name):
             videofile = file
             video = VideoFileClip(videofile)
             if song_name != '':
-                video.audio.write_audiofile(f'{song}.mp3', codec='libmp3lame') # Create mp3 with specified song name
+                video.audio.write_audiofile(f'{song_name}.mp3', codec='libmp3lame') # Create mp3 with specified song name
             else:
                 # If no song name is supplied, use the video name
                 video.audio.write_audiofile(f'{file.removesuffix('.mp4')}.mp3', codec='libmp3lame')
@@ -103,9 +100,9 @@ def send_to_spotify_folder():
             # Send the file to the spotify save directory
             os.rename(file, f'{config["spotify-save-location"]}/{file}')
 
-def getSong(song, artist):
+def getSong(song, artist, yt_base_search):
     print('[i] Fetching song...')
-    search_url = compile_search_url(song, artist)
+    search_url = compile_search_url(song, artist, yt_base_search)
 
     song_link = get_song_links(search_url)[0]
 
@@ -139,18 +136,27 @@ def getPlaylist(playlist_link):
 def main():
     yt_base_search = 'https://www.youtube.com/results?search_query='
 
-    mode = input('Select mode: ')
+    while True:
+        os.system('cls')
+        print(banner)
+        print('1. Single Song')
+        print('2. Playlist')
+        print('q. Quit')
+        mode = input('Select mode: ')
 
-    if int(mode) == 1:
-        song = input('Song Name: ')
-        artist = input('Song Artist: ')
-        getSong(song, artist)
-    elif int(mode) == 2:
-        playlist_link = input('Playlist Link: ')
-        getPlaylist(playlist_link)
-    else:
-        print('Invalid mode selected. Exiting.')
-        exit()
+        if mode == 'q':
+            print('Exiting...')
+            exit()
+        elif int(mode) == 1:
+            song = input('Song Name: ')
+            artist = input('Song Artist: ')
+            getSong(song, artist, yt_base_search)
+        elif int(mode) == 2:
+            playlist_link = input('Playlist Link: ')
+            getPlaylist(playlist_link)
+        else:
+            print('Invalid mode selected. Exiting.')
+            exit()
 
 if __name__ == '__main__':
     main()
